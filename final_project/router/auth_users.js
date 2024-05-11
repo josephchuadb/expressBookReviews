@@ -54,39 +54,30 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  const isbn = req.params.isbn;
-    let book = books[isbn];
-    // Check if book exists
-    if (book) {
-        let author = req.body.author;
-        let title = req.body.title;
-        let reviews = req.body.reviews;
-        //if author has been changed, update the author 
-        if(author) {
-            book["author"] = author;
-        }
-        //if title has been changed, update the title 
-        if(title) {
-            book["title"] = title;
-        }
-        //if reviews has been changed, update the reviews 
-        if(reviews) {
-            book["reviews"] = reviews;
-        }
-        books[isbn]=book;
-        res.send(`Book with the isbn  ${isbn} updated.`);
-    } else{
-        res.send("Unable to find book!");
+    const username = req.session.authorization["username"];
+    const isbn = req.params.isbn;
+    const findUser = users[username];
+    const findBook = books[isbn];
+    if (findUser) {
+        findBook["review"] = req.body.review;
+        res.send(`Book review with the isbn ${isbn} updated.`);
+    } else {
+        findBook.push({ review: review });
+        res.send(`Book review with the isbn new ${isbn} updated.`);
     }
 });
 
 // Delete a book review
 regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const username = req.session.authorization["username"];
     const isbn = req.params.isbn;
     if (isbn) {
-        delete books[isbn];
+        if (books[isbn].reviews.username === username) {
+            delete books[isbn].reviews;
+        }
+        res.send(`Book with the ${isbn} for this username review deleted.`);
     }
-    res.send(`Books with the isbn ${isbn} deleted.`);
+    res.send(`Book with the ${isbn} username review not found.`);
 });
 
 module.exports.authenticated = regd_users;

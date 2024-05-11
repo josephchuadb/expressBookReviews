@@ -27,25 +27,51 @@ public_users.get('/',function (req, res) {
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
     const isbn = req.params.isbn;
-    res.send(JSON.stringify(books[isbn]));
+    const findIsbn = books[isbn];
+
+    if (findIsbn) {
+        res.send(findIsbn);
+    } else {
+        res.send("ISBN cannot be found in the book details");
+    }
 });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
     const author = req.params.author;
-    res.send(JSON.stringify(books[author]));
+    const bookList = Object.values(books);
+    const findByAuthor = bookList.filter((book) => book.author === author);
+    
+    if (findByAuthor.length > 0) {
+        res.send(findByAuthor);
+    } else {
+        res.send("Book not found by this author");
+    }
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     const title = req.params.title;
-    res.send(JSON.stringify(books[title]));
+    const bookList = Object.values(books);
+    const findByTitle = bookList.filter((book) => book.title === title);
+
+    if (findByTitle.length > 0) {
+        res.send(findByTitle);
+      } else {
+        res.send("Book title not found");
+    }
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-    const review = req.params.review;
-    res.send(JSON.stringify(books[review]));
+    const isbn = req.params.isbn;
+    const review = books[isbn]?.reviews;
+
+    if (review) {
+        res.send(review);
+    } else {
+        res.send("Book review not found for this isbn");
+    }
 });
 
 module.exports.general = public_users;
