@@ -58,6 +58,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     const isbn = req.params.isbn;
     const findUser = users[username];
     const findBook = books[isbn];
+
     if (findUser) {
         findBook["review"] = req.body.review;
         res.send(`Book review with the isbn ${isbn} updated.`);
@@ -75,9 +76,9 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
         if (books[isbn].reviews.username === username) {
             delete books[isbn].reviews;
         }
-        res.send(`Book with the ${isbn} for this username review deleted.`);
+        res.send(`Book review with the ${isbn} for this username review deleted.`);
     }
-    res.send(`Book with the ${isbn} username review not found.`);
+    res.send(`Book review with the ${isbn} for this username is not found.`);
 });
 
 module.exports.authenticated = regd_users;
