@@ -58,27 +58,11 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     const isbn = req.params.isbn;
     const findUser = users[username];
     const findBook = books[isbn];
-
     if (findUser) {
-        findBook["review"] = req.body.review;
-        res.send(`Book review with the isbn ${isbn} updated.`);
+      findBook["reviews"] = req.body.review;
+      res.send(`Book with the isbn ${isbn} updated.`);
     } else {
-        findBook.push({ review: review });
-        res.send(`Book review with the isbn new ${isbn} updated.`);
-    }
-});
-
-// Add a book review
-regd_users.put("/auth/review/:isbn", (req, res) => {
-    const username = req.session.authorization["username"];
-    const isbn = req.params.isbn;
-    const findUser = users[username];
-    const findBook = books[isbn];
-    if (findUser) {
-      findBook["review"] = req.body.review;
-      res.send(`Book with the isbn  ${isbn} updated.`);
-    } else {
-      findBook.push({ review: review });
+      findBook.push({ reviews: reviews });
       res.send(`Book with the isbn new ${isbn} updated.`);
     }
 });
