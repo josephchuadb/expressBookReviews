@@ -70,31 +70,18 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
+    const username = req.session.authorization["username"];
     const isbn = req.params.isbn;
-    const review = req.body.review;
-    const username = req.user.username; // The username is stored in the req.user object
-  
-    // Check if the book exists in the database
-    if (books.hasOwnProperty(isbn)) {
-      const book = books[isbn];
-  
-      // Check if the user already has a review for the book
-      if (book.reviews.hasOwnProperty(username)) {
-        // Modify the existing review
-        book.reviews[username].review = review;
-        return res.status(200).json({ message: "Review modified successfully" });
-      } else {
-        // Add a new review for the user
-        book.reviews[username] = {
-          username: username,
-          review: review,
-        };
-        return res.status(200).json({ message: "Review added successfully" });
-      }
+    const findUser = users[username];
+    const findBook = books[isbn];
+    if (findUser) {
+      findBook["review"] = req.body.review;
+      res.send(`Book with the isbn  ${isbn} updated.`);
     } else {
-      return res.status(404).json({ message: "Book not found" });
+      findBook.push({ review: review });
+      res.send(`Book with the isbn new ${isbn} updated.`);
     }
-  });
+});
 
 // Delete a book review
 regd_users.delete("/auth/review/:isbn", (req, res) => {
