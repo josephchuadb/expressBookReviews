@@ -77,9 +77,9 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
         if (findBook.reviews[username] === username) {
             delete findBook.reviews;
         }
-        res.send(`Book review with ${isbn} for this username is deleted.`);
+        res.send(`Book review with ISBN ${isbn} for this username is deleted.`);
     }
-    res.send(`Book review with ${isbn} for this username is not found.`);
+    res.send(`Book review with ISBN ${isbn} for this username is not found.`);
 });
 
 module.exports.authenticated = regd_users;
